@@ -32,7 +32,7 @@ def show_info():
             if time_diff.days >= 2:
                 inactive_users.append(user)
 
-    ready_info = get_ready_user_info()
+    ready_info = get_ready_user_info()  # 반환값은 각 카테고리마다 [{"name": ..., "phone": ...}] 형태여야 함
 
     return render_template('dashboard.html', inactive_users=inactive_users, ready_info=ready_info)
 

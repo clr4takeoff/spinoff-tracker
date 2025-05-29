@@ -20,62 +20,44 @@
         {% endif %}
     </div>
 
+    {% macro render_section(title, users, section_id) %}
     <div class="section">
-        <h2>✅ 실험 진입자 </h2>
-        {% if ready_info.common %}
-        <table>
-            <tr><th>Name - Experimenter</th></tr>
-            {% for name in ready_info.common %}
-            <tr><td>{{ name }}</td></tr>
-            {% endfor %}
-        </table>
-        {% else %}
-        <p>해당하는 실험자가 없습니다</p>
-        {% endif %}
-    </div>
+        <h2>
+            {{ title }}
+            {% if users %}
+            <button onclick="copyPhones('{{ section_id }}')">전화번호 복사</button>
+            {% endif %}
+        </h2>
 
-    <div class="section">
-        <h2>📋 설문 응답만 한 사람</h2>
-        {% if ready_info.only_survey %}
+        {% if users %}
+        <div id="{{ section_id }}" style="display: none;">
+            {{ users | map(attribute='phone') | join(', ') }}
+        </div>
         <table>
             <tr><th>Name</th></tr>
-            {% for name in ready_info.only_survey %}
-            <tr><td>{{ name }}</td></tr>
+            {% for person in users %}
+            <tr><td>{{ person.name }}</td></tr>
             {% endfor %}
         </table>
         {% else %}
         <p>해당하는 실험자가 없습니다</p>
         {% endif %}
     </div>
+    {% endmacro %}
 
-    <div class="section">
-    <h2>🧪 테스트만 한 사람</h2>
-    {% if ready_info.only_test %}
-    <table>
-        <tr><th>Experimenter ID</th></tr>
-        {% for user_id in ready_info.only_test %}
-        <tr><td>{{ user_id }}</td></tr>
-        {% endfor %}
-    </table>
-    {% else %}
-    <p>해당하는 실험자가 없습니다</p>
-    {% endif %}
-</div>
+    {{ render_section("✅ 실험 진입자", ready_info.common, "commonPhones") }}
+    {{ render_section("📋 설문 응답만 한 사람", ready_info.only_survey, "surveyPhones") }}
+    {{ render_section("🧪 테스트만 한 사람", ready_info.only_test, "testPhones") }}
+    {{ render_section("📮 메일 발송 완료자 중 미응답자", ready_info.only_application, "appPhones") }}
 
-
-    <div class="section">
-        <h2>📮 메일 발송 완료자 중 미응답자</h2>
-        {% if ready_info.only_application %}
-        <table>
-            <tr><th>Name - Experimenter</th></tr>
-            {% for name in ready_info.only_application %}
-            <tr><td>{{ name }}</td></tr>
-            {% endfor %}
-        </table>
-        {% else %}
-        <p>해당하는 실험자가 없습니다</p>
-        {% endif %}
-    </div>
+    <script>
+    function copyPhones(id) {
+        const phoneText = document.getElementById(id).innerText.trim();
+        navigator.clipboard.writeText(phoneText)
+            .then(() => alert("전화번호가 복사되었습니다!"))
+            .catch(err => alert("복사 실패: " + err));
+    }
+    </script>
 
 </body>
 </html>
