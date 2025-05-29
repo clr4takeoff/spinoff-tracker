@@ -1,5 +1,5 @@
-spinoff.json
-.DS_Store
-/content/
 __pycache__/
 *.pyc
+.env
+content/*.csv
+content/*.json
