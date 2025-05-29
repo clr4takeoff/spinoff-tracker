@@ -5,6 +5,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="summary-box">
+        <strong>실험 진입률:</strong>
+        {{ ready_info.common | length }}명 /
+        {{ (ready_info.common | length) + (ready_info.only_application | length) }}명
+    </div>
 
     <div class="section">
         <h2>🚨 Inactive Users (2+ days)</h2>
