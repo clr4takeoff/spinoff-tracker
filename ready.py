@@ -63,12 +63,14 @@ def get_ready_user_info():
     # 설문만 한 사람
     only_survey = names_survey - names_application
     only_survey_final = []
-    for name in sorted(name for name in only_survey if name != "ㅇ"):
+
+    for name in sorted(name for name in only_survey if name and name != "ㅇ" and not any(c.isdigit() for c in name)):
         exp = name_to_exp.get(name)
         if not exp or exp.upper() not in test_user_ids:
             phone = name_to_phone.get(name, "")
             display_name = f"{name}-설문응답"
             only_survey_final.append({"name": display_name, "phone": phone})
+
 
     # 신청만 한 사람
     only_application = names_application - names_survey

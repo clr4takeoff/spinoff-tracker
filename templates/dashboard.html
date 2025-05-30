@@ -12,18 +12,26 @@
     </div>
 
     <div class="section">
-        <h2>🚨 Inactive Users (2+ days)</h2>
-        {% if inactive_users %}
-        <table>
-            <tr><th>User</th></tr>
-            {% for user in inactive_users %}
-            <tr><td>{{ user }}</td></tr>
-            {% endfor %}
-        </table>
-        {% else %}
-        <p>No inactive users found.</p>
-        {% endif %}
+    <h2>
+        🚨 Inactive Users ({{ inactive_users | length }}명)
+        <button onclick="copyPhones('inactivePhones')">전화번호 복사</button>
+    </h2>
+
+    {% if inactive_users %}
+    <div id="inactivePhones" style="display: none;">
+        {{ inactive_users | map(attribute='phone') | join(', ') }}
     </div>
+    <table>
+        <tr><th>Name</th></tr>
+        {% for user in inactive_users %}
+        <tr><td>{{ user.name }}</td></tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No inactive users found.</p>
+    {% endif %}
+    </div>
+
 
     {% macro render_section(title, users, section_id) %}
     <div class="section">

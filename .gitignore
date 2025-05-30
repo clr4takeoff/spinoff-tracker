@@ -3,3 +3,4 @@ __pycache__/
 .env
 content/*.csv
 content/*.json
+/venv/
