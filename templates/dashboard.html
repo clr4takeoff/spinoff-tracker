@@ -62,18 +62,7 @@
     {{ render_section("🧪 테스트만 한 사람", ready_info.only_test, "testPhones") }}
     {{ render_section("📮 메일 발송 완료자 중 미응답자", ready_info.only_application, "appPhones") }}
 
-    <script>
-    function copyPhones(id) {
-        const phoneText = document.getElementById(id).innerText.trim();
-        if (!phoneText) {
-            alert("복사할 전화번호가 없습니다.");
-            return;
-        }
-        navigator.clipboard.writeText(phoneText)
-            .then(() => alert("전화번호가 복사되었습니다!"))
-            .catch(err => alert("복사 실패: " + err));
-    }
-    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
    
 </div>
 
