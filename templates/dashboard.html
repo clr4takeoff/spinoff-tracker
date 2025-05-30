@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="container">
     <div class="summary-box">
         <strong>실험 진입률:</strong>
         {{ ready_info.common | length }}명 /
@@ -73,6 +74,8 @@
             .catch(err => alert("복사 실패: " + err));
     }
     </script>
+   
+</div>
 
 </body>
 </html>
