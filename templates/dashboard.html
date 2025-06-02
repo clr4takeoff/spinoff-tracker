@@ -12,33 +12,12 @@
         {{ (ready_info.common | length) + (ready_info.only_application | length) }}명
     </div>
 
-    <div class="section">
-    <h2>
-        🚨 Inactive Users ({{ inactive_users | length }}명)
-        <button onclick="copyPhones('inactivePhones')">전화번호 복사</button>
-    </h2>
-
-    {% if inactive_users %}
-    <div id="inactivePhones" style="display: none;">
-        {{ inactive_users | map(attribute='phone') | join(', ') }}
-    </div>
-    <table>
-        <tr><th>Name</th></tr>
-        {% for user in inactive_users %}
-        <tr><td>{{ user.name }}</td></tr>
-        {% endfor %}
-    </table>
-    {% else %}
-    <p>No inactive users found.</p>
-    {% endif %}
-    </div>
-
-
     {% macro render_section(title, users, section_id) %}
     <div class="section">
         <h2>
             {{ title }} ({{ users | length }}명)
             <button onclick="copyPhones('{{ section_id }}')">전화번호 복사</button>
+            <button onclick="loadAndCopyText('{{ section_id }}')">문자 내용 복사</button>
         </h2>
 
         {% if users %}
@@ -57,14 +36,13 @@
     </div>
     {% endmacro %}
 
+    {{ render_section("🚨 Inactive Users", inactive_users, "inactivePhones") }}
     {{ render_section("✅ 실험 진입자", ready_info.common, "commonPhones") }}
     {{ render_section("📋 설문 응답만 한 사람", ready_info.only_survey, "surveyPhones") }}
     {{ render_section("🧪 테스트만 한 사람", ready_info.only_test, "testPhones") }}
     {{ render_section("📮 메일 발송 완료자 중 미응답자", ready_info.only_application, "appPhones") }}
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-   
-</div>
-
+    </div>
 </body>
 </html>

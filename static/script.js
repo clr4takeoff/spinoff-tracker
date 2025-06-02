@@ -8,3 +8,14 @@ function copyPhones(id) {
         .then(() => alert("전화번호가 복사되었습니다!"))
         .catch(err => alert("복사 실패: " + err));
 }
+
+function loadAndCopyText(sectionId) {
+    fetch('/static/texts.json')
+        .then(response => response.json())
+        .then(data => {
+            const text = data[sectionId] || "복사할 텍스트 없음";
+            navigator.clipboard.writeText(text)
+                .then(() => alert("텍스트가 복사되었습니다!"))
+                .catch(err => alert("복사 실패: " + err));
+        });
+}
