@@ -71,6 +71,17 @@ def get_ready_user_info():
             display_name = f"{name}-설문응답"
             only_survey_final.append({"name": display_name, "phone": phone})
 
+    # 테스트만 한 사람
+    test_only_ids = sorted(
+        user_id for user_id in test_user_ids
+        if user_id not in experimenters_in_survey
+    )
+
+        # 테스트한 사람 이름 추출
+    experimenters_in_test = {
+        name for name, exp in filtered_name_to_exp.items()
+        if str(exp).upper() in test_user_ids
+    }
 
     # 신청만 한 사람
     only_application = names_application - names_survey - experimenters_in_test
@@ -81,17 +92,6 @@ def get_ready_user_info():
         display_name = f"{name}-{exp}"
         only_app_items.append({"name": display_name, "phone": phone})
 
-    # 테스트만 한 사람
-    test_only_ids = sorted(
-        user_id for user_id in test_user_ids
-        if user_id not in experimenters_in_survey
-    )
-
-    # 테스트한 사람 이름 추출
-    experimenters_in_test = {
-        name for name, exp in filtered_name_to_exp.items()
-        if str(exp).upper() in test_user_ids
-    }
 
     test_items = []
     for exp_id in test_only_ids:
