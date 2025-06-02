@@ -73,7 +73,7 @@ def get_ready_user_info():
 
 
     # 신청만 한 사람
-    only_application = names_application - names_survey
+    only_application = names_application - names_survey - experimenters_in_test
     only_app_items = []
     for name in sorted(only_application):
         exp = filtered_name_to_exp.get(name)
@@ -86,6 +86,13 @@ def get_ready_user_info():
         user_id for user_id in test_user_ids
         if user_id not in experimenters_in_survey
     )
+
+    # 테스트한 사람 이름 추출
+    experimenters_in_test = {
+        name for name, exp in filtered_name_to_exp.items()
+        if str(exp).upper() in test_user_ids
+    }
+
     test_items = []
     for exp_id in test_only_ids:
         name = full_exp_to_name.get(exp_id, "(이름 없음)")

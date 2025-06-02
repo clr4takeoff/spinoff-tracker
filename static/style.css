@@ -5,8 +5,8 @@ body {
 }
 
 .container {
-    max-width: 800px;   /* 원하는 최대 너비 */
-    margin: 0 auto;     /* 중앙 정렬 */
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .summary-box {
