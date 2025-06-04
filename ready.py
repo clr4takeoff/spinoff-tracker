@@ -66,7 +66,7 @@ def get_ready_user_info():
 
     for name in sorted(name for name in only_survey if name and name != "ㅇ" and not any(c.isdigit() for c in name)):
         exp = name_to_exp.get(name)
-        if not exp or exp.upper() not in test_user_ids:
+        if not exp or str(exp).upper() not in test_user_ids:
             phone = name_to_phone.get(name, "")
             display_name = f"{name}-설문응답"
             only_survey_final.append({"name": display_name, "phone": phone})
