@@ -36,8 +36,8 @@ for user, entries in data['test'].items():
         last_diary_date = max(diary_dates).replace(hour=0, minute=0, second=0, microsecond=0)
         time_diff = reference_date - last_diary_date
 
-        # 2일 이상 활동이 없으면 비활성 사용자로 추가
-        if time_diff.days >= 2:
+        # 2일 이상 활동이 없으면 비활성 사용자로 추가: 검색 날짜 제외
+        if time_diff.days >= 3:
             # 사용자 이름 찾기 (ready_info에서 사용자 ID와 매칭되는 이름 추출)
             name = next((item['name'].split('-')[0] for item in ready_info['common'] + ready_info['only_test'] if item['name'].endswith(user)), user)
             # 전화번호 가져오기 (없으면 빈 문자열)
