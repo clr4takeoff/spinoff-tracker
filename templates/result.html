@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>실험자 결과 정보</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }
+        button { padding: 5px 10px; }
+    </style>
+</head>
+<body>
+    <h2>실험자별 날짜 및 전화번호 그룹</h2>
+    {% for (a, b), group in grouped_results.items() %}
+        <h3>그룹: {{ a }} ~ {{ b }}</h3>
+        <button onclick="copyToClipboard('{{ group.all_phones|join(',') }}')">전화번호 복사</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>user_id</th>
+                    <th>a (로그 다음날)</th>
+                    <th>b (a + 28일)</th>
+                    <th>전화번호</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in group.rows %}
+                <tr>
+                    <td>{{ row.user_id }}</td>
+                    <td>{{ row.a }}</td>
+                    <td>{{ row.b }}</td>
+                    <td>{{ row.phones }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <hr>
+    {% endfor %}
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                alert("복사되었습니다:\n" + text);
+            }, function(err) {
+                alert("복사 실패: " + err);
+            });
+        }
+    </script>
+</body>
+</html>
