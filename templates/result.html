@@ -11,12 +11,20 @@
     </style>
 </head>
 <body>
-    <h2>실험자별 날짜 및 전화번호 그룹</h2>
 
-    {% for (a, b), group in grouped_results.items() %}
-        <h3>그룹: {{ a }} ~ {{ b }}</h3>
+    <h2>📅 실험 일정별 그룹 요약</h2>
+    <ul>
+      {% for group in group_summaries %}
+        <li><strong>{{ group.label }}:</strong> {{ group.a }} ~ {{ group.b }} ({{ group.count }}명)</li>
+      {% endfor %}
+    </ul>
+    <hr>
+
+    <h2>실험자별 날짜 및 전화번호 그룹</h2>
+    {% for label, group in grouped_results.items() %}
+        <h3>{{ label }}: {{ group.a }} ~ {{ group.b }}</h3>
         <button onclick="copyToClipboard('{{ group.all_phones|join(',') }}')">전화번호 복사</button>
-        <button onclick="copyText(`{{ make_sms(a, b)|replace('`', '\\`') }}`)">문자 내용 복사</button>
+        <button onclick="copyText(`{{ make_sms(group.a, group.b)|replace('`', '\\`') }}`)">문자 내용 복사</button>
 
         <table>
             <thead>
@@ -56,3 +64,42 @@
     </script>
 </body>
 </html>
+
+<style>
+    body {
+        font-family: sans-serif;
+        line-height: 1.6;  /* 본문 전체 줄간격 */
+        margin: 20px;
+    }
+    ul {
+        padding-left: 20px;
+        margin-bottom: 20px;
+    }
+    li {
+        margin-bottom: 8px;  /* 그룹 요약 사이 간격 */
+    }
+    h2 {
+        margin-top: 30px;
+        margin-bottom: 10px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 30px;
+    }
+    th, td {
+        border: 1px solid #aaa;
+        padding: 8px;
+        text-align: center;
+    }
+    button {
+        padding: 5px 10px;
+        margin: 5px 5px 15px 0;
+    }
+    pre {
+        white-space: pre-wrap;
+        word-break: keep-all;
+        background: #f9f9f9;
+        padding: 10px;
+    }
+</style>

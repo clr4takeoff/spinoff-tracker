@@ -68,7 +68,30 @@ def show_result():
 
     grouped_results = dict(sorted(grouped_results.items()))
 
-    return render_template("result.html", grouped_results=grouped_results, make_sms=make_sms)
+    # ✅ 그룹 요약 정보 + 그룹명(A, B, C...) 추가
+    group_summaries = []
+    labeled_grouped_results = {}  # 그룹명 키로 저장
+    for idx, ((a, b), group) in enumerate(grouped_results.items()):
+        label = f"Group {chr(65 + idx)}"
+        group_summaries.append({
+            "label": label,
+            "a": a,
+            "b": b,
+            "count": len(group["rows"])
+        })
+        labeled_grouped_results[label] = {
+            "a": a,
+            "b": b,
+            "rows": group["rows"],
+            "all_phones": group["all_phones"]
+        }
+
+    return render_template(
+        "result.html",
+        grouped_results=labeled_grouped_results,
+        group_summaries=group_summaries,
+        make_sms=make_sms
+    )
 
 if __name__ == "__main__":
     app.run(debug=True, port=4567)
