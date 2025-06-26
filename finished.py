@@ -1,5 +1,9 @@
 # finished.py
 import pandas as pd
+from collections import defaultdict
+from datetime import datetime, timedelta
+import re
+
 
 def get_finished_users(csv_path="content/spinoff 참가 신청서(응답).csv"):
     df = pd.read_csv(csv_path)
@@ -16,3 +20,54 @@ def get_finished_users(csv_path="content/spinoff 참가 신청서(응답).csv"):
         })
 
     return users
+
+def group_finished_users(finished_users, test_logs):
+    grouped = defaultdict(lambda: {"users": [], "phones": set()})
+
+    for user in finished_users:
+        pid = user.get("pid")
+        if not pid or pid not in test_logs:
+            continue
+
+        logs = test_logs.get(pid)
+        if logs:
+            try:
+                log_dates = [datetime.strptime(entry, "%Y-%m-%d %H:%M:%S") for entry in logs.keys()]
+                first_log = min(log_dates)
+                a = (first_log + timedelta(days=1)).strftime("%Y-%m-%d")
+                b = (first_log + timedelta(days=29)).strftime("%Y-%m-%d")  # 종료일 +1
+                key = (a, b)
+                grouped[key]["users"].append(user)
+                grouped[key]["phones"].add(user["phone"])
+            except:
+                continue
+
+    # 그룹 정렬
+    result = []
+    for idx, ((a, b), group) in enumerate(sorted(grouped.items())):
+        label = f"Group {chr(65 + idx)}"
+        result.append({
+            "label": label,
+            "a": a,
+            "b": b,
+            "users": group["users"],
+            "phones": ", ".join(group["phones"])
+        })
+    return result
+
+def get_sent_phone_numbers(path="static/sent_phones.txt"):
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+            # 정규식으로 쉼표 또는 줄바꿈 기준으로 분리
+            numbers = re.split(r'[,\n]+', content)
+            # 공백 제거 + 빈 문자열 제거
+            return set(num.strip() for num in numbers if num.strip())
+    except FileNotFoundError:
+        return set()
+
+
+def mark_sent_status(finished_users, sent_numbers):
+    for user in finished_users:
+        user['is_sent'] = user.get('phone') in sent_numbers
+    return finished_users
