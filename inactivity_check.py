@@ -1,22 +1,37 @@
-# inactivity_check.py
 import json
 from datetime import datetime
 from ready import get_ready_user_info
+from finished import get_finished_users
 
 def get_inactive_users():
     with open('content/spinoff.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     ready_info = get_ready_user_info()
+    finished_users = get_finished_users()
 
+    # 종료된 이름 set
+    finished_names = {user['name'] for user in finished_users}
+
+    # 실험 종료자 제거
+    for key in ['common', 'only_application', 'only_test']:
+        if key in ready_info:
+            ready_info[key] = [
+                user for user in ready_info[key]
+                if user['name'].split('-')[0] not in finished_names
+            ]
+
+    # 전화번호 매핑용 dict
     name_to_phone = {
         item['name'].split('-')[0]: item['phone']
-        for item in ready_info['common'] + ready_info['only_application'] + ready_info['only_test']
+        for key in ['common', 'only_application', 'only_test']
+        for item in ready_info.get(key, [])
     }
 
     user_id_to_name = {
         item['name'].split('-')[1]: item['name'].split('-')[0]
-        for item in ready_info['common'] + ready_info['only_test']
+        for key in ['common', 'only_test']
+        for item in ready_info.get(key, [])
         if '-' in item['name']
     }
 

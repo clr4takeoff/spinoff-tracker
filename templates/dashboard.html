@@ -8,9 +8,14 @@
     <div class="container">
     <div class="summary-box">
         <strong>실험 진입률:</strong>
-        {{ ready_info.common | length }}명 /
-        {{ (ready_info.common | length) + (ready_info.only_application | length) }}명
+        {{ ready_info.common | length + finished_users | length }}명 /
+        {{
+            ready_info.common | length
+            + finished_users | length
+            + ready_info.only_application | length
+        }}명
     </div>
+
 
     {% macro render_section(title, users, section_id) %}
     <div class="section">
@@ -38,7 +43,7 @@
 
     {{ render_section("🚨 Inactive Users", inactive_users, "inactivePhones") }}
     {{ render_section("🔚 실험 종료자", finished_users, "finishedPhones") }}
-    {{ render_section("✅ 실험 진입자", ready_info.common, "commonPhones") }}
+    {{ render_section("✅ 실험 진행자", ready_info.common, "commonPhones") }}
     {{ render_section("📋 설문 응답만 한 사람", ready_info.only_survey, "surveyPhones") }}
     {{ render_section("🧪 테스트만 한 사람", ready_info.only_test, "testPhones") }}
     {{ render_section("📮 메일 발송 완료자 중 미응답자", ready_info.only_application, "appPhones") }}
