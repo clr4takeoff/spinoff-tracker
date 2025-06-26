@@ -5,21 +5,33 @@ from datetime import datetime, timedelta
 import re
 
 
-def get_finished_users(csv_path="content/spinoff 참가 신청서(응답).csv"):
+def get_finished_users(test_logs, csv_path="content/spinoff 참가 신청서(응답).csv"):
     df = pd.read_csv(csv_path)
+    today = datetime.today().date()
+    finished_users = []
 
-    # 필터: 실험 종료된 참가자
-    finished_df = df[df['실험 종료 여부'] == 'O']
+    for _, row in df.iterrows():
+        pid = str(row.get("실험자명", "") or "").strip()
+        if not pid or pid not in test_logs:
+            continue
 
-    users = []
-    for _, row in finished_df.iterrows():
-        users.append({
-            'name': row['성함'],
-            'phone': str(row['전화번호 (e.g. 010-0000-0000)']).replace('-', ''),
-            'pid': row.get('실험자명', '').strip()  # PID (e.g. P2)
-        })
+        logs = test_logs[pid]
+        try:
+            log_dates = [datetime.strptime(entry, "%Y-%m-%d %H:%M:%S") for entry in logs]
+            first_log = min(log_dates)
+            a = first_log + timedelta(days=1)
+            b = a + timedelta(days=28)
+            if b.date() < today:
+                finished_users.append({
+                    'name': row['성함'],
+                    'phone': str(row['전화번호 (e.g. 010-0000-0000)']).replace('-', ''),
+                    'pid': pid
+                })
+        except:
+            continue
 
-    return users
+    return finished_users
+
 
 def group_finished_users(finished_users, test_logs):
     grouped = defaultdict(lambda: {"users": [], "phones": set()})

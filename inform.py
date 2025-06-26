@@ -85,6 +85,7 @@ def show_result():
             "rows": group["rows"],
             "all_phones": group["all_phones"]
         }
+        
 
     return render_template(
         "result.html",

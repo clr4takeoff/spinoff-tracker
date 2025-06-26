@@ -7,8 +7,9 @@ def get_inactive_users():
     with open('content/spinoff.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
+    test_logs = data["test"]
     ready_info = get_ready_user_info()
-    finished_users = get_finished_users()
+    finished_users = get_finished_users(test_logs)
 
     # 종료된 이름 set
     finished_names = {user['name'] for user in finished_users}
