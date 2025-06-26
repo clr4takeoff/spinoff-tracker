@@ -4,3 +4,4 @@ __pycache__/
 content/*.csv
 content/*.json
 /venv/
+static/finished_text.json

@@ -10,7 +10,11 @@ function copyPhones(id) {
 }
 
 function loadAndCopyText(sectionId) {
-    fetch('/static/texts.json')
+    const filePath = sectionId === 'finishedPhones'
+        ? '/static/finished_text.json'
+        : '/static/texts.json';
+
+    fetch(filePath)
         .then(response => response.json())
         .then(data => {
             const text = data[sectionId] || "복사할 텍스트 없음";
