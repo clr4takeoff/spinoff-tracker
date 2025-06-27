@@ -13,6 +13,7 @@ def get_inactive_users():
 
     # 종료된 이름 set
     finished_names = {user['name'] for user in finished_users}
+    finished_ids = {user['pid'] for user in finished_users if 'pid' in user}
 
     # 실험 종료자 제거
     for key in ['common', 'only_application', 'only_test']:
@@ -29,9 +30,10 @@ def get_inactive_users():
         for item in ready_info.get(key, [])
     }
 
+    # 사용자 ID → 이름 매핑 dict
     user_id_to_name = {
         item['name'].split('-')[1]: item['name'].split('-')[0]
-        for key in ['common', 'only_test']
+        for key in ['common', 'only_application', 'only_test']
         for item in ready_info.get(key, [])
         if '-' in item['name']
     }
@@ -41,6 +43,10 @@ def get_inactive_users():
 
     for user, entries in data['test'].items():
         if not entries:
+            continue
+
+        # 실험 종료자는 스킵
+        if user in finished_ids:
             continue
 
         diary_dates = []
