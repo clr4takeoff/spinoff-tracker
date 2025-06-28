@@ -32,11 +32,12 @@ def get_inactive_users():
 
     # 사용자 ID → 이름 매핑 dict
     user_id_to_name = {
-        item['name'].split('-')[1]: item['name'].split('-')[0]
+        item['name'].split('-')[1].upper(): item['name'].split('-')[0]
         for key in ['common', 'only_application', 'only_test']
         for item in ready_info.get(key, [])
         if '-' in item['name']
     }
+
 
     inactive_users = []
     reference_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -62,7 +63,7 @@ def get_inactive_users():
             days_inactive = (reference_date - last_diary_date).days
 
             if days_inactive >= 2:
-                name = user_id_to_name.get(user, user)
+                name = user_id_to_name.get(user.upper(), user)
                 phone = name_to_phone.get(name, "")
                 inactive_users.append({
                     "name": f"{name}-{user} (비활성 {days_inactive}일)",
