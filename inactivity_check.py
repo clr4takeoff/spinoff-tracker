@@ -63,11 +63,18 @@ def get_inactive_users():
             days_inactive = (reference_date - last_diary_date).days
 
             if days_inactive >= 2:
-                name = user_id_to_name.get(user.upper(), user)
+                name = user_id_to_name.get(user.upper(), user.upper())
                 phone = name_to_phone.get(name, "")
+                
+                if name.upper() == user.upper():
+                    continue
+                
+                display_name = f"{name}-{user.upper()} (비활성 {days_inactive}일)"
+                
                 inactive_users.append({
-                    "name": f"{name}-{user} (비활성 {days_inactive}일)",
+                    "name": display_name,
                     "phone": phone
                 })
+
 
     return ready_info, inactive_users
